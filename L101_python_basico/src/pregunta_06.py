@@ -1,3 +1,9 @@
+import pandas as pd
+from pathlib import Path
+
+ACTIVITY_DIR = Path(__file__).resolve().parents[1]
+INPUT_FILE = ACTIVITY_DIR / "data" / "data.csv.gz"
+
 def pregunta_06():
     """
     La quinta columna (`metrics`) contiene pares `clave:valor` separados por
@@ -12,5 +18,24 @@ def pregunta_06():
 
         [("aaa", 1, 9), ("bbb", 1, 9), ...]
     """
+    df = pd.read_csv(INPUT_FILE, sep="\t", header=None, names=["letter", "value", "date", "c3", "metrics"])
 
-    raise NotImplementedError
+    lista_plana = df["metrics"].str.split(",").explode().tolist()
+
+    grupos = {}
+    for item in lista_plana:
+        clave, valor = item.split(":")
+        valor = int(valor)
+
+        if clave not in grupos:
+           grupos[clave] = []
+        grupos[clave].append(valor)
+
+    resultado = [
+        (clave, min(grupos[clave]), max(grupos[clave]))
+        for clave in sorted(grupos.keys())
+    ]
+
+    return resultado
+    
+
