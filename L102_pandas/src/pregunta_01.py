@@ -1,3 +1,8 @@
+import pandas as pd
+from pathlib import Path
+
+ACTIVITY_DIR = Path(__file__).resolve().parents[1]
+INPUT_FILE = ACTIVITY_DIR / "data" / "tbl0.tsv"
 def pregunta_01():
     """
     ¿Cuántos registros tiene la tabla `data/tbl0.tsv`? Retorne la cantidad
@@ -8,4 +13,7 @@ def pregunta_01():
         40
     """
 
-    raise NotImplementedError
+    df = pd.read_csv(INPUT_FILE, sep='\t')
+    return df.shape[0]
+
+    
